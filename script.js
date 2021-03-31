@@ -112,7 +112,7 @@ function calculateValues(inputModified, inputTarget) {
 		convertedValue = parseFloat(unmaskedModifiedValue) * REAUtoBRL;
 	}
 
-	inputTarget.typedValue = convertedValue;
+	inputTarget.typedValue = normalizeENotation(convertedValue);
 }
 
 function changeCotationActiveStatus(activate) {
