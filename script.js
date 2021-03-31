@@ -23,6 +23,7 @@ const valueFields = {
 var REAUtoWBNB = null;
 var WBNBtoBRL = null;
 var REAUtoBRL = null;
+var BRLtoREAU = null;
 
 var isCotationActive = false;
 var isCotationFocused = false;
@@ -61,6 +62,7 @@ function getREAUValue() {
 	var callCountInterval = setInterval(function () {
 		if (REAUtoWBNB != null && WBNBtoBRL != null) {
 			REAUtoBRL = REAUtoWBNB * WBNBtoBRL;
+			BRLtoREAU = WBNBtoBRL / REAUtoWBNB;
 
 			clearInterval(callCountInterval);
 		}
@@ -100,14 +102,11 @@ function formatValueToDisplay(brlValue) {
 }
 
 function calculateValues(inputModified, inputTarget) {
-	console.log(inputModified);
-	console.log(inputTarget);
-
 	var unmaskedModifiedValue = inputModified.unmaskedValue;
 
 	var convertedValue = '0,00';
 
-	if (inputModified == valueFields.toMask) {
+	if (inputModified.el.input.id == valueFields.to.id) {
 		convertedValue = parseFloat(unmaskedModifiedValue) / REAUtoBRL;
 	} else {
 		convertedValue = parseFloat(unmaskedModifiedValue) * REAUtoBRL;
