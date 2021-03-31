@@ -1,114 +1,72 @@
 body {
 	background: #f5f5f5;
 	font: 60% arial;
+	width: 100%;
+	margin: 0;
+	padding: 0;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
 }
 
 #logo {
-	margin-top: 5%;
-	background: transparent url(./images/logo.png) no-repeat center center;
-	background-size: 200px;
+	width: 100%;
+	margin-top: 10%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+#logo > img {
 	height: 200px;
-	margin-right: auto;
 }
 
 #cotation-values {
 	color: #2fc594;
 	font-size: 2em;
 	letter-spacing: 0.05em;
-	word-spacing: -0.3em;
-	margin: 10em 0.9em 0.5em 0.9em;
+	margin: 1em 1em 0.5em 1em;
+	padding: 1em;
 	display: flex;
+	flex-direction: column;
 	align-items: center;
 	justify-content: center;
+	height: 100%;
+	width: calc(100% - 4em);
 }
 
 .values-wrapper {
 	color: #d8d8d8;
-	font-size: 3em;
-	margin: 0 0.1em;
-	padding: 0 0.07em 0.03em;
-	float: left;
-	clear: left;
-	font-size: 1.4em;
+	width: 100%;
+	font-size: 2em;
+	margin: 0.4em;
+	padding: 0.2em;
+	padding: 0;
 	display: flex;
 	align-items: center;
-	-webkit-transition: all 0.3s ease-in-out;
-	-moz-transition: all 0.3s ease-in-out;
-	-o-transition: all 0.3s ease-in-out;
+	justify-content: center;
 	transition: all 0.3s ease-in-out;
 }
 
-.values-wrapper:first-child {
-	margin-bottom: 0.3em;
-	margin-top: 0.3em;
+.values-wrapper .currency-symbol {
+	margin-right: 0.3em;
+	transition: all 0.3s ease-in-out;
+	text-align: center;
+	margin-top: 5px;
+	min-width: 135px;
 }
 
 .values-wrapper input {
 	outline: 0;
-}
-
-.values-wrapper .currency-symbol {
-	display: inline-block;
-	text-align: left;
-	width: 2.1em;
-	-webkit-transition: all 0.3s ease-in-out;
-	-moz-transition: all 0.3s ease-in-out;
-	-o-transition: all 0.3s ease-in-out;
-	transition: all 0.3s ease-in-out;
-}
-
-input#fromCurrency,
-input#toCurrency {
 	border: 0;
+	border-bottom: 2px solid #c8c8c8;
 	color: #909090;
 	font-family: verdana;
 	font-size: 1em;
-	margin-left: 0.1em;
-	text-align: right;
-	width: 2.3em;
-	-webkit-transition: all 0.3s ease-in-out;
-	-moz-transition: all 0.3s ease-in-out;
-	-o-transition: all 0.3s ease-in-out;
+	text-align: center;
+	min-width: 2.4em;
 	transition: all 0.3s ease-in-out;
-}
-
-.values-wrapper input {
-	min-width: 3.9em;
-	max-width: 3.9em;
-}
-
-@media (min-width: 239px) {
-	.values-wrapper input {
-		min-width: 4.6em;
-		max-width: 4.6em;
-	}
-}
-
-@media (min-width: 299px) {
-	.values-wrapper {
-		font-size: 1.8em;
-	}
-	.values-wrapper input {
-		min-width: 4.7em;
-		max-width: 4.7em;
-	}
-}
-
-@media (min-width: 319px) {
-	.values-wrapper input {
-		min-width: 5.3em;
-		max-width: 5.3em;
-	}
-}
-
-@media (min-width: 359px) {
-	.values-wrapper {
-		font-size: 2em;
-	}
-	.values-wrapper input {
-		min-width: 5.5em;
-		max-width: 5.5em;
-	}
 }
 
 .values-wrapper,
@@ -122,56 +80,59 @@ input#toCurrency {
 	background: #bbffe9;
 }
 
-/* ajustes para ipad e desktop */
-@media (min-width: 641px) {
+#middle-text {
+	min-width: 130px;
+	text-align: center;
+}
+
+@media (min-width: 1500px) {
 	#logo {
-		margin-top: 10%;
+		width: 100%;
+		margin-top: 5%;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+	}
+
+	#logo > img {
+		height: 300px;
 	}
 
 	#cotation-values {
-		font-size: 1.2em;
-		margin-top: 4%;
-	}
-
-	#cotation-values .optional {
-		display: inline;
+		color: #2fc594;
+		font-size: 2em;
+		letter-spacing: 0.05em;
+		margin: 1em 1em 0.5em 1em;
+		padding: 1em;
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+		justify-content: center;
+		height: 100%;
+		width: calc(100% - 4em);
 	}
 
 	.values-wrapper {
-		float: none;
-		clear: none;
-		font-size: 3em;
-	}
-
-	.values-wrapper input,
-	.values-wrapper input#fromCurrency {
-		min-width: 0;
-		max-width: none;
+		color: #d8d8d8;
+		font-size: 2.5em;
+		margin: 0.4em;
+		padding: 0.2em;
+		padding: 0;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		transition: all 0.3s ease-in-out;
 	}
 
 	.values-wrapper .currency-symbol {
-		width: auto;
+		margin-right: 0.3em;
+		transition: all 0.3s ease-in-out;
+		text-align: right;
+		margin-top: 5px;
+		min-width: unset;
 	}
 
-	.values-wrapper:first-child {
-		margin: 0 0.1em;
-	}
-}
-
-@media (min-width: 780px) {
-	#cotation-values {
-		font-size: 1.4em;
-	}
-}
-
-@media (min-width: 880px) {
-	#cotation-values {
-		font-size: 1.6em;
-	}
-}
-
-@media (min-width: 1020px) {
-	#cotation-values {
-		font-size: 2em;
+	.currency-symbol-from {
+		min-width: 150px;
 	}
 }

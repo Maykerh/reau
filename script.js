@@ -7,8 +7,8 @@ var maskOptions = {
 	scale: 2,
 	signed: false,
 	thousandsSeparator: '.',
-	padFractionalZeros: false, // if true, then pads zeros at end to the length of scale
-	normalizeZeros: true, // appends or removes zeros at ends
+	padFractionalZeros: false,
+	normalizeZeros: false,
 	radix: ',',
 	mapToRadix: ['.'],
 };
@@ -32,7 +32,6 @@ function getREAUValue() {
 	axios
 		.get('https://api.binance.com/api/v3/ticker/price?symbol=BNBBRL')
 		.then(function (response) {
-			console.log(response);
 			WBNBtoBRL = parseFloat(response.data.price);
 		})
 		.catch(function (err) {
@@ -92,6 +91,10 @@ function normalizeENotation(number) {
 	return number;
 }
 
+function adjustFieldToContent(el) {
+	el.style.width = el.value.length * 0.62 + 'em';
+}
+
 function formatValueToDisplay(brlValue) {
 	var formatted = new Intl.NumberFormat('pt-br', {
 		maximumFractionDigits: 9,
@@ -127,33 +130,22 @@ function changeCotationActiveStatus(activate) {
 	}
 }
 
-function adjustValueFieldsSize() {
-	// for (var i in valueFields) {
-	// 	if (valueFields[i].value.length > 10) {
-	// 		valueFields[i].style.width = '6.7em';
-	// 	} else if (valueFields[i].value.length < 3) {
-	// 		valueFields[i].style.width = valueFields[i].value.length * 0.65 + 'em';
-	// 	} else {
-	// 		valueFields[i].style.width = valueFields[i].value.length * 0.65 - 0.3 + 'em';
-	// 	}
-	// }
-}
-
 function expandValueFields() {
-	valueFields.from.style.width = valueFields.to.style.width = 6 + 'em';
+	valueFields.from.style.width = valueFields.to.style.width = '100%';
 }
 
-document.getElementById('cotation-values').onmouseover = valueFields.to.onmouseover = function () {
-	changeCotationActiveStatus(true);
-};
+// document.getElementById('cotation-values').onmouseover = valueFields.to.onmouseover = function () {
+// 	changeCotationActiveStatus(true);
+// };
 
-document.getElementById('cotation-values').onmouseout = valueFields.to.onmouseout = function () {
-	if (!isCotationFocused) {
-		changeCotationActiveStatus(false);
-	}
-};
+// document.getElementById('cotation-values').onmouseout = valueFields.to.onmouseout = function () {
+// 	if (!isCotationFocused) {
+// 		changeCotationActiveStatus(false);
+// 	}
+// };
 
 valueFields.from.onfocus = valueFields.to.onfocus = function () {
+	this.select();
 	expandValueFields();
 	changeCotationActiveStatus(true);
 
@@ -162,6 +154,9 @@ valueFields.from.onfocus = valueFields.to.onfocus = function () {
 
 valueFields.from.onblur = valueFields.to.onblur = function () {
 	formatValueToDisplay(this.value);
+
+	adjustFieldToContent(valueFields.to);
+	adjustFieldToContent(valueFields.from);
 
 	isCotationFocused = false;
 	inputModifiedLastValue = '0,00';

@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 	<head>
 		<meta charset="UTF-8" />
-		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
 		<title>Cotação do $REAU hoje</title>
 		<link rel="icon" type="image/x-icon" href="./images/favicon.ico" />
 
@@ -18,17 +18,14 @@
 			content="reau,valor do reau,preço do real,preço reau,quanto vale um reau,quanto vale 1 reau,$reau,valor do $reau,preço do real,preço $reau,quanto vale um $reau,quanto vale 1 $reau"
 		/>
 
-		<meta name="description" content="Cotação da criptomoeda $REAU em tempo (quase) real" />
+		<meta name="description" content="Cotação da criptomoeda $REAU" />
 
 		<meta property="og:type" content="website" />
 		<meta property="og:site_name" content="$REAU Hoje" />
 		<meta property="og:title" content="Quanto vale 1 $REAU hoje" />
 		<meta property="og:url" content="https://reauhoje.com" />
 		<meta property="og:image" content="./images/logo.png" />
-		<meta
-			property="og:description"
-			content="Cotação da criptomoeda $REAU em tempo (quase) real"
-		/>
+		<meta property="og:description" content="Cotação da criptomoeda $REAU" />
 
 		<meta name="author" content="Mayke Herbst" />
 
@@ -41,18 +38,19 @@
 		<script src="https://unpkg.com/imask"></script>
 	</head>
 
-	<body class="desktop vsc-initialized">
-		<div id="logo"></div>
+	<body>
+		<div id="logo"><img src="./images/logo.png" alt="" /></div>
 
 		<div id="cotation-values">
-			<span class="values-wrapper"
-				><span class="currency-symbol">$reau</span
-				><input type="text" id="fromCurrency" value="0" style="width: 2.3em" /></span
-			><span> está valendo </span
-			><span class="values-wrapper"
-				><span class="currency-symbol">R$</span
-				><input type="text" id="toCurrency" value="0,00" style="width: 2.3em"
-			/></span>
+			<div class="values-wrapper">
+				<span class="currency-symbol currency-symbol-from">$REAU</span>
+				<input type="text" id="fromCurrency" value="0,00" style="width: 2.3em" />
+			</div>
+			<div id="middle-text"><span> está valendo </span></div>
+			<div class="values-wrapper">
+				<span class="currency-symbol currency-symbol-to">R$</span>
+				<input type="text" id="toCurrency" value="0,00" style="width: 2.3em" />
+			</div>
 		</div>
 
 		<script src="./script.js"></script>
