@@ -25,7 +25,6 @@ const valueFields = {
 };
 
 var REAUtoBRL = null;
-
 var isCotationActive = false;
 var isCotationFocused = false;
 
@@ -80,22 +79,22 @@ function loadUserWalletBalance() {
 		});
 }
 
-function getREAUValue() {
+async function getREAUValue() {
 	handleLoading(true);
 
-	REAUInfoProvider.getInfo().then(function (info) {
-		REAUtoBRL = info.reauBrlPrice;
+	const info = await REAUInfoProvider.getInfo();
 
-		if (valueFields.fromMask.typedValue == 0) {
-			valueFields.fromMask.typedValue = 1000000;
-		}
+	REAUtoBRL = info.reauBrlPrice;
 
-		calculateValues(valueFields.fromMask, valueFields.toMask);
+	if (valueFields.fromMask.typedValue == 0) {
+		valueFields.fromMask.typedValue = 1000000;
+	}
 
-		adjustValueFieldsToContent();
+	calculateValues(valueFields.fromMask, valueFields.toMask);
 
-		handleLoading(false);
-	});
+	adjustValueFieldsToContent();
+
+	handleLoading(false);
 }
 
 loadUserWallet();
@@ -110,6 +109,7 @@ function handleLoading(loading) {
 		refreshButton.classList.remove('refresh-button-loading');
 	}
 }
+
 function normalizeENotation(number) {
 	if (Math.abs(number) < 1.0) {
 		var e = parseInt(number.toString().split('e-')[1]);
@@ -172,6 +172,8 @@ function calculateValues(inputModified, inputTarget) {
 
 	inputTarget.typedValue = normalizeENotation(convertedValue);
 
+	addToHistory();
+
 	updateHumanizedValue();
 }
 
@@ -190,6 +192,24 @@ function changeCotationActiveStatus(activate) {
 function expandValueFields() {
 	valueFields.from.style.width = valueFields.to.style.width = '100%';
 }
+
+async function refreshData() {
+	await getREAUValue();
+}
+
+function addToHistory() {
+	let newEntry = document.createElement('div');
+	let now = new Date();
+
+	newEntry.innerHTML = `${now.toLocaleTimeString()} <b>$REAU</b>: <span class="history-value"">${
+		valueFields.fromMask.value
+	}</span> <b>R$</b>: <span class="history-value"">${valueFields.toMask.value}</span>`;
+	document.querySelector('#history').prepend(newEntry);
+}
+
+setInterval(function () {
+	refreshData();
+}, 15000);
 
 valueFields.from.onfocus = valueFields.to.onfocus = function () {
 	this.select();
@@ -210,12 +230,16 @@ valueFields.from.onblur = valueFields.to.onblur = function () {
 
 valueFields.from.onkeyup = function (event) {
 	if (event.keyCode != 9) {
+		lastInput = 'reau';
+
 		calculateValues(valueFields.fromMask, valueFields.toMask);
 	}
 };
 
 valueFields.to.onkeyup = function (event) {
 	if (event.keyCode != 9) {
+		lastInput = 'real';
+
 		calculateValues(valueFields.toMask, valueFields.fromMask);
 	}
 };
