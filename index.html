@@ -33,26 +33,48 @@
 	</head>
 
 	<body>
-		<div id="logo"><img src="./images/logo.png" alt="" /></div>
-
-		<div id="cotation-values">
-			<div class="from-wrapper">
-				<div class="values-wrapper">
-					<span class="currency-symbol currency-symbol-from">$REAU</span>
-					<input type="text" id="fromCurrency" value="1.000.000" style="width: 5.58em" />
-				</div>
-				<div id="humanized-value">
-					<img src="./images/exclamation.svg" />
-				</div>
+		<div id="container">
+			<div id="logo"><img src="./images/logo.png" alt="" /></div>
+			<div id="wallet-input-wrapper">
+				<input
+					type="text"
+					placeholder="Insira o endereço da sua carteira para buscar o saldo automaticamente"
+					id="wallet-input"
+				/>
+				<button onclick="saveUserWallet()" id="wallet-input-button">Salvar</button>
 			</div>
-			<div id="middle-text"><span> está valendo </span></div>
-			<div class="to-wrapper">
-				<div class="values-wrapper">
-					<span class="currency-symbol currency-symbol-to">R$</span>
-					<input type="text" id="toCurrency" value="0,00" style="width: 2.48em" />
+
+			<div id="cotation-values">
+				<div class="from-wrapper">
+					<div class="values-wrapper">
+						<span class="currency-symbol currency-symbol-from">$REAU</span>
+						<input type="text" id="fromCurrency" value="1.000.000" />
+					</div>
+					<div id="humanized-value">
+						<img src="./images/exclamation.svg" />
+					</div>
+				</div>
+				<div id="middle-text"><span> está valendo </span></div>
+				<div class="to-wrapper">
+					<div class="values-wrapper">
+						<span class="currency-symbol currency-symbol-to">R$</span>
+						<input type="text" id="toCurrency" value="0,00" />
+					</div>
+					<div
+						id="refresh-button"
+						class="refresh-button-loading"
+						onclick="getREAUValue()"
+					>
+						<img id="refresh-img" src="./images/refresh.svg" />
+					</div>
 				</div>
 			</div>
 		</div>
+		<script
+			src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.1/axios.min.js"
+			integrity="sha512-bZS47S7sPOxkjU/4Bt0zrhEtWx0y0CRkhEp8IckzK+ltifIIE9EMIMTuT/mEzoIMewUINruDBIR/jJnbguonqQ=="
+			crossorigin="anonymous"
+		></script>
 		<script src="https://unpkg.com/imask"></script>
 		<script src="https://unpkg.com/@popperjs/core@2"></script>
 		<script src="https://unpkg.com/tippy.js@6"></script>

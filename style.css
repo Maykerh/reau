@@ -1,18 +1,29 @@
-body {
-	background: #f5f5f5;
-	font: 60% arial;
-	width: 100%;
+* {
 	margin: 0;
 	padding: 0;
+}
+
+body {
+	background: #f5f5f5;
+	width: 100%;
+	font: 60% arial;
+}
+
+#container {
+	background: #f5f5f5;
+	width: 100%;
+	margin: 0;
+	padding: 1em;
 	display: flex;
 	flex-direction: column;
 	align-items: center;
 	justify-content: center;
+	box-sizing: border-box;
 }
 
 #logo {
 	width: 100%;
-	margin-top: 10%;
+	margin-top: 2em;
 	display: flex;
 	align-items: center;
 	justify-content: center;
@@ -20,6 +31,50 @@ body {
 
 #logo > img {
 	height: 200px;
+}
+
+#wallet-input-wrapper {
+	display: flex;
+	margin-top: 3em;
+	margin-bottom: 3em;
+	width: 100%;
+	max-width: 700px;
+	padding: 0em 2em;
+}
+
+#wallet-input {
+	padding: 10px;
+	font-size: 17px;
+	border: 1px solid grey;
+	float: left;
+	width: 80%;
+	background: #f1f1f1;
+	border-top-left-radius: 5px;
+	border-bottom-left-radius: 5px;
+}
+
+#wallet-input-button {
+	display: flex;
+	align-items: center;
+	padding: 5px 15px;
+	background: #2fe699;
+	font-size: 17px;
+	color: #3a3a3a;
+	border: 1px solid grey;
+	border-left: none;
+	cursor: pointer;
+	border-top-right-radius: 5px;
+	border-bottom-right-radius: 5px;
+}
+
+#wallet-input-button img {
+	height: 25px;
+	margin-top: 3px;
+	color: #c8c8c8;
+}
+
+#wallet-input-button:hover {
+	background: #2fc594;
 }
 
 #cotation-values {
@@ -51,14 +106,20 @@ body {
 
 .from-wrapper,
 .to-wrapper {
+	width: 100%;
 	display: flex;
 	align-items: center;
 	justify-content: center;
 	transition: all 0.3s ease-in-out;
 }
 
+#fromCurrency,
+#toCurrency {
+	width: 100%;
+}
+
 #humanized-value {
-	margin-top: -4.5em;
+	margin-top: -4em;
 	margin-left: -2em;
 }
 
@@ -67,12 +128,32 @@ body {
 	height: 25px;
 }
 
+#refresh-button {
+	margin-top: -4em;
+	margin-left: -2em;
+	cursor: pointer;
+}
+
+@keyframes spin {
+	100% {
+		transform: rotate(360deg);
+	}
+}
+
+#refresh-button > img {
+	width: 25px;
+	height: 25px;
+}
+
+.refresh-button-loading {
+	animation: spin 2s linear infinite;
+}
+
 .values-wrapper .currency-symbol {
-	margin-right: 0.3em;
+	margin-right: 0.1em;
 	transition: all 0.3s ease-in-out;
 	text-align: center;
 	margin-top: 5px;
-	min-width: 135px;
 }
 
 .values-wrapper input {
@@ -99,8 +180,11 @@ body {
 
 .values-wrapper,
 .values-wrapper input {
-	color: #c8c8c8;
 	background: transparent;
+}
+
+.to-wrapper {
+	margin-top: 1em;
 }
 
 .cotacao-active .values-wrapper,
@@ -111,6 +195,7 @@ body {
 #middle-text {
 	min-width: 130px;
 	text-align: center;
+	margin-top: 1em;
 }
 
 @media (min-width: 1500px) {
@@ -124,6 +209,20 @@ body {
 
 	#logo > img {
 		height: 300px;
+	}
+
+	#wallet-input-wrapper {
+		margin-top: 3em;
+	}
+
+	#refresh-button {
+		margin-top: -6em;
+		margin-left: -2em;
+		cursor: pointer;
+	}
+
+	#humanized-value {
+		margin-top: -6em;
 	}
 
 	#cotation-values {
@@ -142,6 +241,7 @@ body {
 
 	.values-wrapper {
 		color: #d8d8d8;
+		width: initial;
 		font-size: 2.5em;
 		margin: 0.4em;
 		padding: 0;
@@ -161,5 +261,21 @@ body {
 
 	.currency-symbol-from {
 		min-width: 150px;
+	}
+
+	#fromCurrency,
+	#toCurrency {
+		width: 0;
+	}
+
+	.to-wrapper,
+	.from-wrapper {
+		width: initial;
+		margin-top: initial;
+	}
+
+	#middle-text {
+		min-width: 130px;
+		text-align: center;
 	}
 }
