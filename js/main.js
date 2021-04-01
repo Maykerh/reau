@@ -24,58 +24,23 @@ const valueFields = {
 	toMask: IMask(document.getElementById('toCurrency'), maskOptions),
 };
 
-var REAUtoWBNB = null;
-var WBNBtoBRL = null;
 var REAUtoBRL = null;
-var BRLtoREAU = null;
 
 var isCotationActive = false;
 var isCotationFocused = false;
 
 function getREAUValue() {
-	axios
-		.get('https://api.binance.com/api/v3/ticker/price?symbol=BNBBRL')
-		.then(function (response) {
-			WBNBtoBRL = parseFloat(response.data.price);
-		})
-		.catch(function (err) {
-			console.error(err);
+	REAUInfoProvider.getInfo().then(function (info) {
+		REAUtoBRL = info.reauBrlPrice;
 
-			WBNBtoBRL = 0;
-		});
-
-	axios
-		.post('https://graphql.bitquery.io/', {
-			query:
-				'query GetData(\n  $baseCurrency: String!,\n  $quoteCurrency: String!) {\n ethereum(network: bsc) {\n dexTrades(\n baseCurrency: {is: $baseCurrency}\n quoteCurrency: {is: $quoteCurrency}\n options: {desc: ["block.height","transaction.index"]\n limit:1}\n ) {\n block{\n height\n timestamp{\n time (format: "%Y-%m-%d %H:%M:%S")\n }\n }\n transaction {\n index\n }\n baseCurrency{\n symbol\n }\n quoteCurrency {\n symbol\n }\n quotePrice\n }\n }\n }',
-			variables: {
-				baseCurrency: REAUContract,
-				quoteCurrency: WBNBContract,
-			},
-		})
-		.then(function (response) {
-			REAUtoWBNB = response.data.data.ethereum.dexTrades[0].quotePrice;
-		})
-		.catch(function (err) {
-			console.error(err);
-
-			REAUtoWBNB = 0;
-		});
-
-	var callCountInterval = setInterval(function () {
-		if (REAUtoWBNB != null && WBNBtoBRL != null) {
-			clearInterval(callCountInterval);
-
-			REAUtoBRL = REAUtoWBNB * WBNBtoBRL;
-			BRLtoREAU = WBNBtoBRL / REAUtoWBNB;
-
+		if (valueFields.fromMask.typedValue == 0) {
 			valueFields.fromMask.typedValue = 1000000;
-
-			calculateValues(valueFields.fromMask, valueFields.toMask);
-
-			adjustValueFieldsToContent();
 		}
-	}, 300);
+
+		calculateValues(valueFields.fromMask, valueFields.toMask);
+
+		adjustValueFieldsToContent();
+	});
 }
 
 getREAUValue();
@@ -131,6 +96,7 @@ function calculateValues(inputModified, inputTarget) {
 
 	if (inputModified.el.input.id == valueFields.to.id) {
 		convertedValue = parseFloat(unmaskedModifiedValue) / REAUtoBRL;
+		convertedValue = parseFloat(convertedValue).toFixed(0);
 	} else {
 		convertedValue = parseFloat(unmaskedModifiedValue) * REAUtoBRL;
 	}
@@ -165,8 +131,6 @@ valueFields.from.onfocus = valueFields.to.onfocus = function () {
 };
 
 valueFields.from.onblur = valueFields.to.onblur = function () {
-	formatValueToDisplay(this.value);
-
 	adjustValueFieldsToContent();
 
 	isCotationFocused = false;

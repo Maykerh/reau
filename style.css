@@ -83,7 +83,17 @@ body {
 	font-family: verdana;
 	font-size: 1em;
 	text-align: center;
-	width: 100% !important;
+	transition: all 0.3s ease-in-out;
+}
+
+.values-wrapper input {
+	outline: 0;
+	border: 0;
+	border-bottom: 2px solid #c8c8c8;
+	color: #909090;
+	font-family: verdana;
+	font-size: 1em;
+	text-align: center;
 	transition: all 0.3s ease-in-out;
 }
 
