@@ -27,9 +27,10 @@ var BRLtoREAU = null;
 
 var isCotationActive = false;
 var isCotationFocused = false;
+var lastInput = null;
 
-function getREAUValue() {
-	axios
+async function getREAUValue() {
+	const BNBtoBRLResponse = await axios
 		.get('https://api.binance.com/api/v3/ticker/price?symbol=BNBBRL')
 		.then(function (response) {
 			WBNBtoBRL = parseFloat(response.data.price);
@@ -40,7 +41,7 @@ function getREAUValue() {
 			WBNBtoBRL = 0;
 		});
 
-	axios
+	const REAUtoWBNBResponse = await axios
 		.post('https://graphql.bitquery.io/', {
 			query:
 				'query GetData(\n  $baseCurrency: String!,\n  $quoteCurrency: String!) {\n ethereum(network: bsc) {\n dexTrades(\n baseCurrency: {is: $baseCurrency}\n quoteCurrency: {is: $quoteCurrency}\n options: {desc: ["block.height","transaction.index"]\n limit:1}\n ) {\n block{\n height\n timestamp{\n time (format: "%Y-%m-%d %H:%M:%S")\n }\n }\n transaction {\n index\n }\n baseCurrency{\n symbol\n }\n quoteCurrency {\n symbol\n }\n quotePrice\n }\n }\n }',
@@ -58,17 +59,9 @@ function getREAUValue() {
 			REAUtoWBNB = 0;
 		});
 
-	var callCountInterval = setInterval(function () {
-		if (REAUtoWBNB != null && WBNBtoBRL != null) {
-			REAUtoBRL = REAUtoWBNB * WBNBtoBRL;
-			BRLtoREAU = WBNBtoBRL / REAUtoWBNB;
-
-			clearInterval(callCountInterval);
-		}
-	}, 300);
+		REAUtoBRL = REAUtoWBNB * WBNBtoBRL;
+		BRLtoREAU = WBNBtoBRL / REAUtoWBNB;
 }
-
-getREAUValue();
 
 function normalizeENotation(number) {
 	if (Math.abs(number) < 1.0) {
@@ -166,12 +159,38 @@ valueFields.from.onblur = valueFields.to.onblur = function () {
 
 valueFields.from.onkeyup = function (event) {
 	if (event.keyCode != 9) {
+		lastInput = "reau";
 		calculateValues(valueFields.fromMask, valueFields.toMask);
 	}
 };
 
 valueFields.to.onkeyup = function (event) {
 	if (event.keyCode != 9) {
+		lastInput = "real";
 		calculateValues(valueFields.toMask, valueFields.fromMask);
 	}
 };
+
+async function refreshData() {
+	await getREAUValue()
+	if (lastInput === "reau") {
+		calculateValues(valueFields.fromMask, valueFields.toMask);
+	} else if (lastInput === "real") {
+		calculateValues(valueFields.toMask, valueFields.fromMask);
+	}
+	if (lastInput != null) {
+		addToHistory();
+	}
+}
+
+function addToHistory() {
+	let newEntry = document.createElement("div");
+	let now = new Date();
+	newEntry.innerHTML = `${now.toLocaleTimeString()} <b>REAU</b>: <span class="history-value"">${valueFields.fromMask.typedValue}</span> <b>R$</b>: <span class="history-value"">${valueFields.toMask.typedValue}</span>`;
+	document.querySelector("#history").prepend(newEntry);
+}
+
+refreshData();
+setInterval(function () {
+	refreshData();
+}, 5000);
