@@ -11,11 +11,15 @@ var maskOptions = {
 	normalizeZeros: false,
 	radix: ',',
 	mapToRadix: ['.'],
+	max: 999999999999999,
 };
+
+var maskOptionsFrom = Object.assign({}, maskOptions);
+maskOptionsFrom.scale = 0;
 
 const valueFields = {
 	from: document.getElementById('fromCurrency'),
-	fromMask: IMask(document.getElementById('fromCurrency'), maskOptions),
+	fromMask: IMask(document.getElementById('fromCurrency'), maskOptionsFrom),
 	to: document.getElementById('toCurrency'),
 	toMask: IMask(document.getElementById('toCurrency'), maskOptions),
 };
@@ -60,10 +64,16 @@ function getREAUValue() {
 
 	var callCountInterval = setInterval(function () {
 		if (REAUtoWBNB != null && WBNBtoBRL != null) {
+			clearInterval(callCountInterval);
+
 			REAUtoBRL = REAUtoWBNB * WBNBtoBRL;
 			BRLtoREAU = WBNBtoBRL / REAUtoWBNB;
 
-			clearInterval(callCountInterval);
+			valueFields.fromMask.typedValue = 1000000;
+
+			calculateValues(valueFields.fromMask, valueFields.toMask);
+
+			adjustValueFieldsToContent();
 		}
 	}, 300);
 }
@@ -91,8 +101,9 @@ function normalizeENotation(number) {
 	return number;
 }
 
-function adjustFieldToContent(el) {
-	el.style.width = el.value.length * 0.62 + 'em';
+function adjustValueFieldsToContent() {
+	valueFields.from.style.width = valueFields.from.value.length * 0.62 + 'em';
+	valueFields.to.style.width = valueFields.to.value.length * 0.62 + 'em';
 }
 
 function formatValueToDisplay(brlValue) {
@@ -102,6 +113,15 @@ function formatValueToDisplay(brlValue) {
 	}).format(brlValue);
 
 	return formatted == 'NaN' ? '0,00' : formatted;
+}
+
+const humanizedTooltip = tippy(document.querySelector('#humanized-value'));
+humanizedTooltip.setContent('Nenhum valor informado');
+
+function updateHumanizedValue() {
+	var word = valueFields.fromMask.unmaskedValue.toString().extenso();
+
+	humanizedTooltip.setContent(word + ' de $REAU');
 }
 
 function calculateValues(inputModified, inputTarget) {
@@ -116,6 +136,8 @@ function calculateValues(inputModified, inputTarget) {
 	}
 
 	inputTarget.typedValue = normalizeENotation(convertedValue);
+
+	updateHumanizedValue();
 }
 
 function changeCotationActiveStatus(activate) {
@@ -134,16 +156,6 @@ function expandValueFields() {
 	valueFields.from.style.width = valueFields.to.style.width = '100%';
 }
 
-// document.getElementById('cotation-values').onmouseover = valueFields.to.onmouseover = function () {
-// 	changeCotationActiveStatus(true);
-// };
-
-// document.getElementById('cotation-values').onmouseout = valueFields.to.onmouseout = function () {
-// 	if (!isCotationFocused) {
-// 		changeCotationActiveStatus(false);
-// 	}
-// };
-
 valueFields.from.onfocus = valueFields.to.onfocus = function () {
 	this.select();
 	expandValueFields();
@@ -155,8 +167,7 @@ valueFields.from.onfocus = valueFields.to.onfocus = function () {
 valueFields.from.onblur = valueFields.to.onblur = function () {
 	formatValueToDisplay(this.value);
 
-	adjustFieldToContent(valueFields.to);
-	adjustFieldToContent(valueFields.from);
+	adjustValueFieldsToContent();
 
 	isCotationFocused = false;
 	inputModifiedLastValue = '0,00';
