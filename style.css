@@ -23,20 +23,19 @@ body {
 
 #logo {
 	width: 100%;
-	margin-top: 2em;
+	margin-top: 1.5em;
 	display: flex;
 	align-items: center;
 	justify-content: center;
 }
 
 #logo > img {
-	height: 200px;
+	height: 175px;
 }
 
 #wallet-input-wrapper {
 	display: flex;
 	margin-top: 3em;
-	margin-bottom: 3em;
 	width: 100%;
 	max-width: 700px;
 	padding: 0em 2em;
@@ -59,7 +58,7 @@ body {
 	padding: 5px 15px;
 	background: #2fe699;
 	font-size: 17px;
-	color: #3a3a3a;
+	color: white;
 	border: 1px solid grey;
 	border-left: none;
 	cursor: pointer;
@@ -81,8 +80,7 @@ body {
 	color: #2fc594;
 	font-size: 2em;
 	letter-spacing: 0.05em;
-	margin: 0.7em;
-	padding: 0.7em;
+	margin: 2.5em 0.7em 0 0.7em;
 	display: flex;
 	flex-direction: column;
 	align-items: center;
@@ -94,9 +92,8 @@ body {
 .values-wrapper {
 	color: #d8d8d8;
 	width: 100%;
-	font-size: 2em;
-	margin: 0.2em;
-	padding: 0.2em;
+	font-size: 1.75em;
+	margin-top: 0.5em;
 	padding: 0;
 	display: flex;
 	align-items: center;
@@ -182,10 +179,6 @@ body {
 	background: transparent;
 }
 
-.to-wrapper {
-	margin-top: 1em;
-}
-
 .cotacao-active .values-wrapper,
 .cotacao-active .values-wrapper input {
 	background: #bbffe9;
@@ -194,12 +187,43 @@ body {
 #middle-text {
 	min-width: 130px;
 	text-align: center;
-	margin-top: 1em;
+	margin-top: 0.5em;
+}
+
+#currency-type-wrapper {
+	margin-top: 3em;
+	width: 100%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.currency-type-button {
+	border: 2px solid #2fe699;
+	background: transparent;
+	min-width: 7em;
+	color: #2fe699;
+	border-radius: 5px;
+	padding: 0.5em 1em;
+	margin: 0 0.5em;
+	font-weight: bold;
+	letter-spacing: 0.1em;
+	text-align: center;
+}
+
+.currency-type-button:last-child {
+	margin: 0;
+}
+
+.currency-type-button-active {
+	background-color: #2fe699;
+	color: white;
 }
 
 .history {
 	color: #d8d8d8;
 	font-size: 1.5em;
+	margin-top: 1.5em;
 }
 
 .history-value {
@@ -209,36 +233,32 @@ body {
 @media (min-width: 1500px) {
 	#logo {
 		width: 100%;
-		margin-top: 5%;
+		margin-top: 2em;
 		display: flex;
 		align-items: center;
 		justify-content: center;
 	}
 
 	#logo > img {
-		height: 300px;
-	}
-
-	#wallet-input-wrapper {
-		margin-top: 3em;
+		height: 250px;
 	}
 
 	#refresh-button {
-		margin-top: -6em;
+		margin-top: -5em;
 		margin-left: -2em;
 		cursor: pointer;
 	}
 
 	#humanized-value {
-		margin-top: -6em;
+		margin-top: -5em;
 	}
 
 	#cotation-values {
 		color: #2fc594;
 		font-size: 2em;
 		letter-spacing: 0.05em;
-		margin: 1em 1em 0.5em 1em;
-		padding: 1em;
+		margin: 2em 1em 0 1em;
+		padding: 0;
 		display: flex;
 		flex-direction: row;
 		align-items: center;
@@ -251,7 +271,7 @@ body {
 		color: #d8d8d8;
 		width: initial;
 		font-size: 2.5em;
-		margin: 0.4em;
+		margin: 0em 0.4em;
 		padding: 0;
 		display: flex;
 		align-items: center;
@@ -285,9 +305,10 @@ body {
 	#middle-text {
 		min-width: 130px;
 		text-align: center;
+		margin-top: 1em;
 	}
 
-	.history {
+	#currency-type-wrapper .history {
 		font-size: 2.5em;
 	}
 }

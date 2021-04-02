@@ -2,6 +2,12 @@ const REAUContract = '0x4c79b8c9cB0BD62B047880603a9DEcf36dE28344';
 const WBNBContract = '0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c';
 const CBRLContract = '0x9e691fd624410d631c082202b050694233031cb7';
 
+const currencySymbols = {
+	BNB: 'BNB',
+	USD: '$',
+	BRL: 'R$',
+};
+
 var maskOptions = {
 	mask: Number,
 	scale: 2,
@@ -14,6 +20,8 @@ var maskOptions = {
 	max: 999999999999999,
 };
 
+var updateInterval = null;
+
 var maskOptionsFrom = Object.assign({}, maskOptions);
 maskOptionsFrom.scale = 0;
 
@@ -24,7 +32,7 @@ const valueFields = {
 	toMask: IMask(document.getElementById('toCurrency'), maskOptions),
 };
 
-var REAUtoBRL = null;
+var REAUToSelectedCurrencyValue = null;
 var isCotationActive = false;
 var isCotationFocused = false;
 
@@ -36,11 +44,23 @@ function saveUserWallet() {
 	loadUserWalletBalance();
 }
 
-function loadUserWallet() {
+function loadUserData() {
 	var wallet = localStorage.getItem('reau-user-wallet');
+	var currencyType = localStorage.getItem('currency-type');
+	var lastHistoryEntry = localStorage.getItem('last-history-entry');
 
 	if (wallet != null) {
 		document.getElementById('wallet-input').value = wallet;
+	}
+
+	if (currencyType != null) {
+		changeCurrencyType(currencyType, false);
+	} else {
+		localStorage.setItem('currency-type', 'BRL');
+	}
+
+	if (lastHistoryEntry) {
+		addToHistory(lastHistoryEntry);
 	}
 }
 
@@ -80,11 +100,25 @@ function loadUserWalletBalance() {
 }
 
 async function getREAUValue() {
+	clearInterval(updateInterval);
+
 	handleLoading(true);
 
 	const info = await REAUInfoProvider.getInfo();
 
-	REAUtoBRL = info.reauBrlPrice;
+	const selectedCurrency = localStorage.getItem('currency-type');
+
+	switch (selectedCurrency) {
+		case 'BRL':
+			REAUToSelectedCurrencyValue = info.reauBrlPrice;
+			break;
+		case 'USD':
+			REAUToSelectedCurrencyValue = info.reauUsdPrice;
+			break;
+		case 'BNB':
+			REAUToSelectedCurrencyValue = info.reauBnbPrice;
+			break;
+	}
 
 	if (valueFields.fromMask.typedValue == 0) {
 		valueFields.fromMask.typedValue = 1000000;
@@ -95,9 +129,15 @@ async function getREAUValue() {
 	adjustValueFieldsToContent();
 
 	handleLoading(false);
+
+	addToHistory();
+
+	updateInterval = setInterval(function () {
+		getREAUValue();
+	}, 15000);
 }
 
-loadUserWallet();
+loadUserData();
 loadUserWalletBalance();
 
 function handleLoading(loading) {
@@ -164,15 +204,13 @@ function calculateValues(inputModified, inputTarget) {
 	var convertedValue = '0,00';
 
 	if (inputModified.el.input.id == valueFields.to.id) {
-		convertedValue = parseFloat(unmaskedModifiedValue) / REAUtoBRL;
+		convertedValue = parseFloat(unmaskedModifiedValue) / REAUToSelectedCurrencyValue;
 		convertedValue = parseFloat(convertedValue).toFixed(0);
 	} else {
-		convertedValue = parseFloat(unmaskedModifiedValue) * REAUtoBRL;
+		convertedValue = parseFloat(unmaskedModifiedValue) * REAUToSelectedCurrencyValue;
 	}
 
 	inputTarget.typedValue = normalizeENotation(convertedValue);
-
-	addToHistory();
 
 	updateHumanizedValue();
 }
@@ -193,23 +231,39 @@ function expandValueFields() {
 	valueFields.from.style.width = valueFields.to.style.width = '100%';
 }
 
-async function refreshData() {
-	await getREAUValue();
+function changeCurrencyType(type, triggerUpdate) {
+	localStorage.setItem('currency-type', type);
+
+	document.getElementById('currency-symbol-to').innerHTML = currencySymbols[type];
+	document
+		.getElementsByClassName('currency-type-button-active')[0]
+		.classList.remove('currency-type-button-active');
+	document.getElementById('currency-type-' + type).classList.add('currency-type-button-active');
+
+	if (triggerUpdate) {
+		getREAUValue();
+	}
 }
 
-function addToHistory() {
+function addToHistory(entry) {
+	if (entry) {
+		document.querySelector('#history').innerHTML = entry;
+		return;
+	}
+
 	let newEntry = document.createElement('div');
 	let now = new Date();
+	let currencySymbol = currencySymbols[localStorage.getItem('currency-type')];
 
 	newEntry.innerHTML = `${now.toLocaleTimeString()} <b>$REAU</b>: <span class="history-value"">${
 		valueFields.fromMask.value
-	}</span> <b>R$</b>: <span class="history-value"">${valueFields.toMask.value}</span>`;
+	}</span> <b>${currencySymbol}</b>: <span class="history-value"">${
+		valueFields.toMask.value
+	}</span>`;
 	document.querySelector('#history').prepend(newEntry);
-}
 
-setInterval(function () {
-	refreshData();
-}, 15000);
+	localStorage.setItem('last-history-entry', newEntry.outerHTML);
+}
 
 valueFields.from.onfocus = valueFields.to.onfocus = function () {
 	this.select();

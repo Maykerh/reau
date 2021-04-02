@@ -52,6 +52,7 @@ const REAUInfoProvider = {
 			reauUsdPrice,
 			marketCapBrl: web3.utils.fromWei(circSupply, 'Gwei') * reauBrlPrice,
 			reauBrlPrice,
+			reauBnbPrice: reauPriceBnb,
 		};
 	},
 };
