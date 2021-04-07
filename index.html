@@ -63,21 +63,11 @@
 				<div id="middle-text"><span> está valendo </span></div>
 				<div class="to-wrapper">
 					<div class="values-wrapper">
-						<span class="currency-symbol currency-symbol-to" id="currency-symbol-to"
-							>R$</span
-						>
+						<span class="currency-symbol currency-symbol-to" id="currency-symbol-to">R$</span>
 						<input type="text" id="toCurrency" value="0,00" />
 					</div>
-					<div
-						id="refresh-button"
-						class="refresh-button-loading"
-						onclick="getREAUValue()"
-					>
-						<img
-							id="refresh-img"
-							src="./images/refresh.svg"
-							title="Atualizar o valor da cotação"
-						/>
+					<div id="refresh-button" class="refresh-button-loading" onclick="update()">
+						<img id="refresh-img" src="./images/refresh.svg" title="Atualizar o valor da cotação">
 					</div>
 				</div>
 			</div>
@@ -104,7 +94,7 @@
 					BNB
 				</button>
 			</div>
-			<div id="history" class="history"></div>
+				<div id="history" class="history"></div>
 		</div>
 		<script
 			src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.1/axios.min.js"

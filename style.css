@@ -125,8 +125,8 @@ body {
 }
 
 #refresh-button {
-	margin-top: -4em;
-	margin-left: -2em;
+	/* margin-top: -4em;
+	margin-left: -2em; */
 	cursor: pointer;
 }
 
@@ -224,6 +224,8 @@ body {
 	color: #d8d8d8;
 	font-size: 1.5em;
 	margin-top: 1.5em;
+	overflow-y: scroll;
+	height: 200px;
 }
 
 .history-value {
