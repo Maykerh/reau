@@ -99,6 +99,14 @@ function loadUserWalletBalance() {
 		});
 }
 
+function update(){
+	if(document.querySelector('#wallet-input').value){
+		saveUserWallet()
+	}else{
+		getREAUValue()
+	}
+}
+
 async function getREAUValue() {
 	clearInterval(updateInterval);
 
@@ -133,7 +141,7 @@ async function getREAUValue() {
 	addToHistory();
 
 	updateInterval = setInterval(function () {
-		getREAUValue();
+		update();
 	}, 15000);
 }
 
@@ -254,15 +262,27 @@ function addToHistory(entry) {
 	let newEntry = document.createElement('div');
 	let now = new Date();
 	let currencySymbol = currencySymbols[localStorage.getItem('currency-type')];
+	var colorDown = '';
+	let lastTotal = localStorage.getItem('total-last-history-entry');
+
+	if(lastTotal > valueFields.toMask.value){
+		colorDown = '#f0847f';
+	}else if(lastTotal < valueFields.toMask.value){
+		colorDown = '#2fe699';
+	}else{
+		colorDown = '#e0dcdc';
+	}
+
 
 	newEntry.innerHTML = `${now.toLocaleTimeString()} <b>$REAU</b>: <span class="history-value"">${
 		valueFields.fromMask.value
-	}</span> <b>${currencySymbol}</b>: <span class="history-value"">${
+	}</span> <b>${currencySymbol}</b>: <span style="background-color:${colorDown};" class="history-value"">${
 		valueFields.toMask.value
 	}</span>`;
 	document.querySelector('#history').prepend(newEntry);
 
 	localStorage.setItem('last-history-entry', newEntry.outerHTML);
+	localStorage.setItem('total-last-history-entry', valueFields.toMask.value);
 }
 
 valueFields.from.onfocus = valueFields.to.onfocus = function () {
